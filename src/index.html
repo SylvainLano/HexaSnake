@@ -1,0 +1,110 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Hexagonal Snake Demo</title>
+		<link rel="stylesheet" href="css/style.css"/>	
+		<script src="scripts/jquery-3.1.1.min.js"></script>
+		<script src="scripts/jscolor.min.js"></script>
+		<script src="scripts/rangeslider.min.js"></script>
+
+		<script type=>
+			$(document).on('input', 'input[type="range"]', function(e) {
+				stepSpeed = logslider(e.currentTarget.value);
+				intervalStart();
+			});
+		</script>
+	</head>
+
+	<body>
+		
+		<noscript>
+			You need to enable JavaScript to show this page.
+		</noscript>
+
+		<div class="center_container" id="header">
+			
+			<h1>Hexagonal Snake</h1>
+			
+		</div>
+
+		<div class="center_container" id="body_container">
+
+			<div id="window_container">
+
+				<div id="window">
+					<canvas id="board" width="600" height="600"></canvas>
+				</div>
+
+				<div id="side_window">
+
+					<div class="label">
+						Score :
+					</div>
+					<div class="display" id="score_display">
+						0
+					</div>
+
+					<div class="label">
+						Speed :
+					</div>					
+					<div class="display">
+						<input
+							type="range"
+							min="0"
+							max="10"
+							step="1"
+							value="5"
+							data-orientation="horizontal"
+							class="rangeslider"
+						/>
+					</div>	
+
+					<div class="label">
+						Actions :
+					</div>		
+					<div class="display">
+						<div class="button" onClick="board(grid.length);">
+							<p>
+								Starve
+							</p>
+						</div>
+
+						<div class="button" onClick="randomize();">
+							<p>
+								Gorge
+							</p>
+						</div>
+					</div>	
+
+					<div class="label">
+						Menu :
+					</div>		
+					<div class="display">
+						<div class="button" onClick="pauseGame();">
+							<p>
+								Pause
+							</p>
+						</div>
+
+						<div class="button" onClick="restart(30);">
+							<p>
+								Restart
+							</p>
+						</div>
+					</div>
+
+					<div class="text">
+						Help the snake get bigger by dropping fruits. Don't overfeed him or he might bite its own tail...
+					</div>	
+
+					<script src="scripts/main.js"></script>
+
+				</div>
+
+			</div>
+			
+		</div>
+
+	</body>
+</html>
