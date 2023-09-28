@@ -639,11 +639,6 @@ function pauseGame() {
   }
 }
 
-var logArr = [2000, 1000, 500, 375, 250, 200, 150, 100, 75, 50, 10];
-function logslider(position) {
-  return logArr[position];
-}
-
 // This creates the Node object.
 function Node(row, col)
 {
@@ -701,8 +696,11 @@ function randomize()
   updateBoard();
 }
 
-board(30);
-
-$( document ).ready(function() {
+const input = document.querySelector("input");
+var logArr = [1000, 750, 500, 375, 250, 200, 150, 100, 75, 50, 25];
+input.addEventListener("input", function(event) {
+  stepSpeed = logArr[event.target.value];
   intervalStart();
 });
+
+board(30);

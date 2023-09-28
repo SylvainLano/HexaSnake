@@ -4,16 +4,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Hexagonal Snake Demo</title>
 		<link rel="stylesheet" href="css/style.css"/>	
-		<script src="scripts/jquery-3.1.1.min.js"></script>
-		<script src="scripts/jscolor.min.js"></script>
-		<script src="scripts/rangeslider.min.js"></script>
-
-		<script type=>
-			$(document).on('input', 'input[type="range"]', function(e) {
-				stepSpeed = logslider(e.currentTarget.value);
-				intervalStart();
-			});
-		</script>
 	</head>
 
 	<body>
@@ -57,6 +47,7 @@
 							value="5"
 							data-orientation="horizontal"
 							class="rangeslider"
+							id="range"
 						/>
 					</div>	
 
