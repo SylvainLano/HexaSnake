@@ -1,2 +1,2 @@
 # HexaSnake
- Hexagonal Snake made in about 12 hours with no dependencies
+ [Hexagonal Snake](http://sylvainlano.github.io/HexaSnake/index.html) made in about 12 hours in JavaScript with no dependencies
