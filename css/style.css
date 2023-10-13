@@ -1,0 +1,108 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+@font-face {
+	font-family: 'MADFONT';
+	src: url('../fonts/MADFT.TTF');
+	/* Add more font formats if necessary for cross-browser compatibility */
+  }  
+
+/* Elements */
+
+html, body{
+	height:100%;
+}
+
+body {
+	background: white;
+}
+
+h1 {
+	padding-top:30px;
+	font-family:'MADFONT';
+	font-size:54px;
+	font-weight:100;
+	color:#208020;
+}
+
+/* Classes */
+
+.center_container{
+	width: 1000px;
+	margin: auto;
+	text-align: center;
+}
+
+.button {
+	margin: 5px;
+	text-align: center;
+	background: rgb(255, 221, 221);
+	padding:4px;
+	cursor: hand;
+	font-size:16px;
+}
+
+.button:hover{
+	background:#ffe8d0;
+}
+
+.label {
+	padding-top: 10px;
+	text-align: left;
+	font-family: 'MADFONT';
+	font-size: 15px;
+}
+
+.display {
+	padding-bottom: 10px;
+	text-align: right;
+	color:#B02020;
+	font-family: 'MADFONT';
+	font-size: 15px;
+}
+
+.text {
+	padding: 10px 5px;
+	text-align: justify;
+	color:#40C0C0;
+	font-family: 'MADFONT';
+	font-size: 11px;
+}
+
+.rangeslider {
+	text-align: center;
+	width: 100%;
+}
+
+/* ID's */
+
+#body_container {
+	background: white;
+}
+
+#window_container {
+	width:760px;
+	position:relative;
+	padding-top:30px;
+	margin:auto;
+}
+
+#content {
+	width:800px;
+	margin:100px;
+	margin-top:50px;
+}
+
+#window {
+	width: 600px;
+}
+
+#side_window {
+	height:500px;
+	width:160px;
+	position:absolute;
+	right:-10px;
+	top:50px;
+}
