@@ -256,6 +256,11 @@ h1 {
 	grid-template-columns: 1fr 1fr;
 }
 
+/* Margins don't merge in a grid: without the bottom one, buttons are 5 px apart as everywhere else */
+#algorithm_buttons .button {
+	margin-bottom: 0px;
+}
+
 #window {
 	position: relative;
 	width: 600px;

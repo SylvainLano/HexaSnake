@@ -48,6 +48,7 @@ let chart;
 let lastSearches = null; // the searches of the last step, null when there was no fruit to look for
 let showExplored = false;
 let searchOverlay = null; // what to paint on the board for the last search, see updateSearchOverlay
+let smart = false; // whether the snake avoids the ways it couldn't get out of, see Snake.smartPath
 
 function draw() {
   drawBoard(ctx, layout, board, snake, hoveredHex, searchOverlay);
@@ -61,6 +62,11 @@ function updateSearchOverlay() {
     path: new Set((search.path || []).map(hexKey)),
     color: pathfinders[pathfinderIndex].color
   };
+}
+
+function toggleSmart() {
+  smart = !smart;
+  document.getElementById('smart_button').classList.toggle('selected', smart);
 }
 
 function toggleExplored() {
@@ -98,6 +104,9 @@ function step() {
   }
   recordSearches(searches);
 
+  if (smart) {
+    path = snake.smartPath(board, path);
+  }
   if (snake.move(board, path)) {
     board.removeFruit(snake.position);
     score += 20;
@@ -441,6 +450,7 @@ document.getElementById('clear_walls_button').addEventListener('click', clearWal
 document.getElementById('pause_button').addEventListener('click', togglePause);
 document.getElementById('restart_button').addEventListener('click', restart);
 document.getElementById('explored_button').addEventListener('click', toggleExplored);
+document.getElementById('smart_button').addEventListener('click', toggleSmart);
 
 buildPathfinderControls();
 newGame();

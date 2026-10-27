@@ -4,18 +4,18 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Hexagonal Snake Demo</title>
-		<link rel="stylesheet" href="css/style.css?v=0.0.8"/>
+		<link rel="stylesheet" href="css/style.css?v=0.0.9"/>
 		<!-- The version is repeated in ?v= so browsers fetch new files after an update, and at the bottom of the side window -->
-		<script src="scripts/hex.js?v=0.0.8" defer></script>
-		<script src="scripts/fruits.js?v=0.0.8" defer></script>
-		<script src="scripts/board.js?v=0.0.8" defer></script>
-		<script src="scripts/pathfinding.js?v=0.0.8" defer></script>
-		<script src="scripts/numbered.js?v=0.0.8" defer></script>
-		<script src="scripts/snake.js?v=0.0.8" defer></script>
-		<script src="scripts/render.js?v=0.0.8" defer></script>
-		<script src="scripts/chart.js?v=0.0.8" defer></script>
-		<script src="scripts/main.js?v=0.0.8" defer></script>
-		<script src="scripts/study.js?v=0.0.8" defer></script>
+		<script src="scripts/hex.js?v=0.0.9" defer></script>
+		<script src="scripts/fruits.js?v=0.0.9" defer></script>
+		<script src="scripts/board.js?v=0.0.9" defer></script>
+		<script src="scripts/pathfinding.js?v=0.0.9" defer></script>
+		<script src="scripts/numbered.js?v=0.0.9" defer></script>
+		<script src="scripts/snake.js?v=0.0.9" defer></script>
+		<script src="scripts/render.js?v=0.0.9" defer></script>
+		<script src="scripts/chart.js?v=0.0.9" defer></script>
+		<script src="scripts/main.js?v=0.0.9" defer></script>
+		<script src="scripts/study.js?v=0.0.9" defer></script>
 	</head>
 
 	<body>
@@ -39,7 +39,13 @@
 					<div class="label">
 						Algorithm :
 					</div>
-					<div class="display" id="algorithm_buttons">
+					<div class="display">
+						<div id="algorithm_buttons"></div>
+						<div class="button" id="smart_button">
+							<p>
+								Smart
+							</p>
+						</div>
 					</div>
 
 					<div class="label">
@@ -149,6 +155,22 @@
 							<p>Two lessons along the way. The first AW# was only 1.5 to 1.8 times faster than A*: swapping two entries of its heap with [a, b] = [b, a] built small arrays at every swap, and a plain temporary variable made it 2.6 times faster. And the timing was unfair at first: AW rebuilt the list of the snake's cells as texts while being timed, when AW# got it ready.</p>
 						</section>
 
+						<section class="study_page" hidden>
+							<h2>A smart snake</h2>
+							<p>Finding the shortest way to a fruit is one thing, getting out afterwards is another. The snake used to rush to the nearest fruit, even at the bottom of a dead end, and die there.</p>
+							<p>With Smart on, before taking a way, it checks that once at its end, fruit eaten, its head could still get next to its tail. Following its tail, which frees a cell in front of it at every step, it can then always get out. If not, it takes a single step after which that is still true, towards its tail if it can, and waits for a better chance.</p>
+							<h3>Results</h3>
+							<p>Games of 1,500 steps, the snake following AW#:</p>
+							<table class="study_table">
+								<tr><th>Game</th><th>Steps it lives</th><th>Length when it dies</th></tr>
+								<tr><td>Overfed, board of 20</td><td>180 &rarr; 438</td><td>72 &rarr; 196</td></tr>
+								<tr><td>Overfed, 15% walls</td><td>93 &rarr; 370</td><td>30 &rarr; 149</td></tr>
+								<tr><td>Normal, board of 30</td><td>308 &rarr; 1,327</td><td>72 &rarr; 397</td></tr>
+							</table>
+							<p>The check costs 90 to 260 &micro;s per step, more as the snake grows. It is not counted in the comparison, which only times the search for the fruit.</p>
+							<p>It still dies once it fills nearly half the board: it only looks at the end of each way, and a fruit falling in the wrong place can still close its exit. Only a snake following a fixed path through every cell would be safe for good.</p>
+						</section>
+
 						<div class="study_navigation">
 							<button id="study_previous">&lsaquo; Previous</button>
 							<span id="study_page_number"></span>
@@ -254,7 +276,7 @@
 					</div>
 
 					<div class="version">
-						v0.0.8
+						v0.0.9
 					</div>
 
 				</div>

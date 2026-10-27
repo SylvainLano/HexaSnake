@@ -54,15 +54,65 @@ class Snake {
 
   // method to move the snake randomly, towards the farthest hex it can reach
   moveRandomly(board) {
-    const availableDirections = this.listValidDirections(board);
-
-    // If there are available directions, choose one randomly
-    if (availableDirections.length > 0) {
-      const preferedDirection = Math.floor(Math.random() * availableDirections.length);
-      this.moveTo(findFarthestStep(this.position, this.walkableTest(board), preferedDirection), board);
+    const step = this.wanderStep(board);
+    if (step) {
+      this.moveTo(step, board);
     } else {
       this.isAlive = false;
     }
+  }
+
+  // The first step towards the farthest hex it can reach, or null if it can't move
+  wanderStep(board) {
+    const availableDirections = this.listValidDirections(board);
+
+    // If there are available directions, choose one randomly
+    if (availableDirections.length === 0) {
+      return null;
+    }
+    const preferedDirection = Math.floor(Math.random() * availableDirections.length);
+    return findFarthestStep(this.position, this.walkableTest(board), preferedDirection);
+  }
+
+  // Smart mode: the way to follow instead of fruitPath (the path to the nearest fruit, or null to wander).
+  // The snake only takes a way if, at its end, its head can still get next to its tail: by following its tail,
+  // which frees the way in front of it, it can then always get out. Otherwise it takes a single step after which
+  // that is still true, towards its tail if it can (eating a fruit on the way would stop the tail for a step),
+  // and only takes the risk when no step is safe anymore.
+  smartPath(board, fruitPath) {
+    let way = fruitPath;
+    if (!way) {
+      const step = this.wanderStep(board);
+      if (!step) {
+        return null;
+      }
+      way = [step];
+    }
+    if (this.canReachTailAfter(board, way, fruitPath !== null)) {
+      return way;
+    }
+    const tailPath = this.pathToTail(board, this.body);
+    const steps = (tailPath ? [tailPath[0]] : []).concat(this.listValidDirections(board).map((direction) => hexNeighbor(this.position, direction)));
+    const safeStep = steps.find((step) => this.canReachTailAfter(board, [step], board.hasFruit(step)));
+    return safeStep ? [safeStep] : way;
+  }
+
+  // Whether the head could still reach the tail once the snake has followed the path (and eaten its fruit)
+  canReachTailAfter(board, path, eats) {
+    const length = this.body.length + (eats ? 1 : 0);
+    const body = [...path].reverse().concat(this.body).slice(0, length);
+    return this.pathToTail(board, body) !== null;
+  }
+
+  // A way from the head of this body to a free hex next to its tail, or null.
+  // The head can't enter the tail's hex, which is still part of the body when it moves; but once next to the tail,
+  // it can follow it, since the tail frees a hex in front of the head at every step.
+  pathToTail(board, body) {
+    const covered = new Set(body.map(hexKey));
+    const isWalkable = (hex) => board.isInside(hex) && !board.hasWall(hex) && !covered.has(hexKey(hex));
+    const tail = body[body.length - 1];
+    const besideTail = [0, 1, 2, 3, 4, 5].map((direction) => hexNeighbor(tail, direction)).filter(isWalkable);
+    return besideTail.length > 0 ? dijkstraSearch(body[0], besideTail, isWalkable).path : null;
   }
 
   // method to move the head to a neighboring hex, eating the fruit there if any
