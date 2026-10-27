@@ -71,6 +71,20 @@ h1 {
 	font-size: 11px;
 }
 
+.label .value {
+	float: right;
+	color: #B02020;
+}
+
+/* Hidden by default, but its space is kept so the panel doesn't move when it shows up */
+.hint {
+	visibility: hidden;
+	padding-top: 2px;
+	text-align: center;
+	color: #40C0C0;
+	font-size: 9px;
+}
+
 .version {
 	padding: 0px 5px;
 	text-align: right;

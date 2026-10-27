@@ -8,6 +8,8 @@ const snakeDeadColor = '#F04444';
 function drawBoard(ctx, layout, board, snake, hoveredHex) {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.lineWidth = 1;
+  // Fruits are 16 px pixel art: once drawn more than twice that size, enlarge them without blurring
+  ctx.imageSmoothingEnabled = layout.hexRectangleWidth - 4 < 32;
   const snakeHexes = new Set(snake.body.map(hexKey));
 
   // Column by column: fruit images fill the rectangle around their hex, so they overlap

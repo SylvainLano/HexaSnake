@@ -4,15 +4,15 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Hexagonal Snake Demo</title>
-		<link rel="stylesheet" href="css/style.css?v=0.0.3"/>
+		<link rel="stylesheet" href="css/style.css?v=0.0.4"/>
 		<!-- The version is repeated in ?v= so browsers fetch new files after an update, and at the bottom of the side window -->
-		<script src="scripts/hex.js?v=0.0.3" defer></script>
-		<script src="scripts/fruits.js?v=0.0.3" defer></script>
-		<script src="scripts/board.js?v=0.0.3" defer></script>
-		<script src="scripts/pathfinding.js?v=0.0.3" defer></script>
-		<script src="scripts/snake.js?v=0.0.3" defer></script>
-		<script src="scripts/render.js?v=0.0.3" defer></script>
-		<script src="scripts/main.js?v=0.0.3" defer></script>
+		<script src="scripts/hex.js?v=0.0.4" defer></script>
+		<script src="scripts/fruits.js?v=0.0.4" defer></script>
+		<script src="scripts/board.js?v=0.0.4" defer></script>
+		<script src="scripts/pathfinding.js?v=0.0.4" defer></script>
+		<script src="scripts/snake.js?v=0.0.4" defer></script>
+		<script src="scripts/render.js?v=0.0.4" defer></script>
+		<script src="scripts/main.js?v=0.0.4" defer></script>
 	</head>
 
 	<body>
@@ -58,7 +58,27 @@
 							class="rangeslider"
 							id="speed_slider"
 						/>
-					</div>	
+					</div>
+
+					<div class="label">
+						Size :
+						<span class="value" id="size_display">30</span>
+					</div>
+					<div class="display">
+						<input
+							type="range"
+							min="10"
+							max="60"
+							step="1"
+							value="30"
+							data-orientation="horizontal"
+							class="rangeslider"
+							id="size_slider"
+						/>
+						<div class="hint" id="size_hint">
+							Restart to resize
+						</div>
+					</div>
 
 					<div class="label">
 						Actions :
@@ -99,7 +119,7 @@
 					</div>
 
 					<div class="version">
-						v0.0.3
+						v0.0.4
 					</div>
 
 				</div>
