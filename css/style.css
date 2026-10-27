@@ -9,13 +9,6 @@
 	/* Add more font formats if necessary for cross-browser compatibility */
   }
 
-/* Pixelify Sans, for the help text (SIL Open Font License, see fonts/PixelifySans-OFL.txt).
-   Its "fi" ligature looks like an "A", so the texts using it turn ligatures off. */
-@font-face {
-	font-family: 'Pixelify Sans';
-	src: url('../fonts/PixelifySans.woff2') format('woff2');
-}
-
 /* Jersey 10, for the comparison, the help and the study (SIL Open Font License, see fonts/Jersey10-OFL.txt) */
 @font-face {
 	font-family: 'Jersey 10';
