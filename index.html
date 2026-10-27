@@ -4,15 +4,16 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Hexagonal Snake Demo</title>
-		<link rel="stylesheet" href="css/style.css?v=0.0.5"/>
+		<link rel="stylesheet" href="css/style.css?v=0.0.6"/>
 		<!-- The version is repeated in ?v= so browsers fetch new files after an update, and at the bottom of the side window -->
-		<script src="scripts/hex.js?v=0.0.5" defer></script>
-		<script src="scripts/fruits.js?v=0.0.5" defer></script>
-		<script src="scripts/board.js?v=0.0.5" defer></script>
-		<script src="scripts/pathfinding.js?v=0.0.5" defer></script>
-		<script src="scripts/snake.js?v=0.0.5" defer></script>
-		<script src="scripts/render.js?v=0.0.5" defer></script>
-		<script src="scripts/main.js?v=0.0.5" defer></script>
+		<script src="scripts/hex.js?v=0.0.6" defer></script>
+		<script src="scripts/fruits.js?v=0.0.6" defer></script>
+		<script src="scripts/board.js?v=0.0.6" defer></script>
+		<script src="scripts/pathfinding.js?v=0.0.6" defer></script>
+		<script src="scripts/snake.js?v=0.0.6" defer></script>
+		<script src="scripts/render.js?v=0.0.6" defer></script>
+		<script src="scripts/chart.js?v=0.0.6" defer></script>
+		<script src="scripts/main.js?v=0.0.6" defer></script>
 	</head>
 
 	<body>
@@ -30,6 +31,42 @@
 		<div class="center_container" id="body_container">
 
 			<div id="window_container">
+
+				<div id="left_window">
+
+					<div class="label">
+						Algorithm :
+					</div>
+					<div class="display" id="algorithm_buttons">
+					</div>
+
+					<div class="label">
+						Comparison :
+					</div>
+					<div class="display">
+						<table class="comparison" id="comparison"></table>
+
+						<!-- History of the measure picked in the table, for both algorithms -->
+						<div class="chart_header">
+							<span id="chart_title"></span>
+							<span class="scale_toggle">
+								<span id="linear_toggle">Lin.</span>
+								<span id="log_toggle">Log</span>
+							</span>
+						</div>
+						<div id="chart_box">
+							<canvas id="chart"></canvas>
+							<div id="chart_tooltip"></div>
+						</div>
+						<div id="chart_legend"></div>
+					</div>
+
+					<div class="text">
+						<p>Help the snake get bigger by dropping fruits. Don't overfeed him or he might bite its own tail...</p>
+						<p>Left click: fruits. Right click: walls. Drag to draw, click again to remove.</p>
+					</div>
+
+				</div>
 
 				<div id="window">
 					<canvas id="board" width="600" height="600"></canvas>
@@ -120,13 +157,19 @@
 						</div>
 					</div>
 
-					<div class="text">
-						<p>Help the snake get bigger by dropping fruits. Don't overfeed him or he might bite its own tail...</p>
-						<p>Left click: fruits. Right click: walls. Drag to draw, click again to remove.</p>
+					<div class="label">
+						View :
+					</div>
+					<div class="display">
+						<div class="button" id="explored_button">
+							<p>
+								Explored
+							</p>
+						</div>
 					</div>
 
 					<div class="version">
-						v0.0.5
+						v0.0.6
 					</div>
 
 				</div>

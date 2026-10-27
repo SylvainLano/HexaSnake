@@ -15,14 +15,21 @@
 	src: url('../fonts/PixelifySans.woff2') format('woff2');
 }
 
+/* Jersey 10, for the numbers of the comparison table (SIL Open Font License, see fonts/Jersey10-OFL.txt) */
+@font-face {
+	font-family: 'Jersey 10';
+	src: url('../fonts/Jersey10.woff2') format('woff2');
+}
+
 /* Elements */
 
 html, body{
 	height:100%;
 }
 
+/* A very light honeycomb around the white card that holds the game */
 body {
-	background: white;
+	background: #F2F7EF url('../images/honeycomb.svg');
 }
 
 h1 {
@@ -42,16 +49,20 @@ h1 {
 }
 
 .button {
-	margin: 2px 5px;
+	margin: 5px;
 	text-align: center;
 	background: rgb(255, 221, 221);
-	padding:1px;
+	padding:4px;
 	cursor: pointer;
 	font-size:16px;
 }
 
 .button:hover{
 	background:#ffe8d0;
+}
+
+.button.selected {
+	background: #FFAAAA;
 }
 
 .label {
@@ -79,6 +90,114 @@ h1 {
 
 .text p + p {
 	padding-top: 4px;
+}
+
+/* Comparison of the algorithms: one column per algorithm, the values in the same red as the other displays */
+.comparison {
+	width: 100%;
+	border-collapse: collapse;
+	font-family: 'Jersey 10';
+	font-size: 20px;
+}
+
+.comparison th, .comparison td {
+	padding: 2px 3px;
+	text-align: right;
+	font-weight: normal;
+	white-space: nowrap;
+}
+
+/* The column of the algorithm the snake follows */
+.comparison .selected {
+	background: rgb(255, 221, 221);
+}
+
+.comparison th, .comparison td:first-child {
+	color: #000000;
+}
+
+.comparison td:first-child {
+	text-align: left;
+}
+
+/* Clicking a row of the table makes the chart follow it */
+.comparison tbody tr {
+	cursor: pointer;
+}
+
+.comparison tr.followed td:not(.selected) {
+	background: #F0F0F0;
+}
+
+/* The chart under the comparison table */
+.chart_header {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	padding: 20px 3px 2px;
+	font-family: 'Jersey 10';
+	font-size: 18px;
+	color: #000000;
+}
+
+.scale_toggle span {
+	padding: 0px 4px;
+	cursor: pointer;
+	color: #898781;
+}
+
+.scale_toggle span.selected {
+	background: rgb(255, 221, 221);
+	color: #B02020;
+}
+
+#chart_box {
+	position: relative;
+}
+
+#chart {
+	display: block;
+	width: 100%;
+	height: 72px;
+}
+
+#chart_tooltip {
+	visibility: hidden;
+	position: absolute;
+	top: 0px;
+	padding: 3px 6px;
+	background: #FFFFFF;
+	border: 1px solid rgba(11, 11, 11, 0.10);
+	text-align: left;
+	white-space: nowrap;
+	pointer-events: none;
+	font-family: 'Jersey 10';
+	font-size: 16px;
+	color: #52514E;
+}
+
+#chart_tooltip strong {
+	font-weight: normal;
+	color: #0B0B0B;
+}
+
+#chart_legend {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+	padding-top: 2px;
+	font-family: 'Jersey 10';
+	font-size: 16px;
+	color: #52514E;
+}
+
+/* A short line of a curve's color, to say which curve a name or a value belongs to */
+.line_key {
+	display: inline-block;
+	width: 12px;
+	height: 2px;
+	margin-right: 4px;
+	vertical-align: middle;
 }
 
 .label .value {
@@ -110,15 +229,23 @@ h1 {
 
 /* ID's */
 
-#body_container {
-	background: white;
+/* Three columns: the left panel, the board and the side panel, on a white card */
+#window_container {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 10px;
+	width: fit-content;
+	margin: 20px auto 30px;
+	padding: 10px 20px 20px;
+	background: #FFFFFF;
+	border-radius: 10px;
+	box-shadow: 0 2px 14px rgba(0, 0, 0, 0.10);
 }
 
-#window_container {
-	width:760px;
-	position:relative;
-	padding-top:30px;
-	margin:auto;
+#left_window {
+	width: 180px;
+	margin-top: 20px;
 }
 
 #window {
@@ -126,9 +253,6 @@ h1 {
 }
 
 #side_window {
-	height:500px;
 	width:160px;
-	position:absolute;
-	right:-10px;
-	top:50px;
+	margin-top: 20px;
 }

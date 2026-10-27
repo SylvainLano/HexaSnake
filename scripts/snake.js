@@ -40,14 +40,11 @@ class Snake {
     return availableDirections;
   }
 
-  // method to move the snake one step, towards the nearest fruit if one can be reached
+  // method to move the snake one step along the path to a fruit found by a search (see pathfinding.js)
   // returns true if a fruit is eaten
-  move(board) {
-    if (board.hasAnyFruit()) {
-      const path = findShortestPath(this.position, (hex) => board.hasFruit(hex), this.walkableTest(board));
-      if (path) {
-        return this.moveTo(path[0], board);
-      }
+  move(board, path) {
+    if (path) {
+      return this.moveTo(path[0], board);
     }
 
     // No fruits available to eat, move the snake randomly

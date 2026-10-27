@@ -12,6 +12,23 @@ function sameHex(hex1, hex2) {
   return hex1.q === hex2.q && hex1.r === hex2.r;
 }
 
+// Cube coordinates of a hex: x + y + z = 0, and each step changes two of them by 1.
+// See https://www.redblobgames.com/grids/hexagons/#conversions-offset ("odd-r")
+function offsetToCube(hex) {
+  const x = hex.q - (hex.r - (hex.r & 1)) / 2;
+  const z = hex.r;
+  return { x, y: -x - z, z };
+}
+
+function cubeDistance(a, b) {
+  return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y), Math.abs(a.z - b.z));
+}
+
+// Number of steps between two hexes on an empty board (walls can only make the real path longer)
+function hexDistance(hex1, hex2) {
+  return cubeDistance(offsetToCube(hex1), offsetToCube(hex2));
+}
+
 // Function to calculate the coordinate of the next hex in a given direction (0 to 5, clockwise)
 function hexNeighbor(hex, direction) {
   const { q, r } = hex;

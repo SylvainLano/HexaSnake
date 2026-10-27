@@ -37,6 +37,18 @@ class Board {
     return this.fruitCount > 0;
   }
 
+  fruitHexes() {
+    const hexes = [];
+    for (let r = 0; r < this.size; r++) {
+      for (let q = 0; q < this.size; q++) {
+        if (this.cells[r][q].fruit) {
+          hexes.push({ q, r });
+        }
+      }
+    }
+    return hexes;
+  }
+
   addFruit(hex) {
     if (this.isEmpty(hex)) {
       this.cells[hex.r][hex.q].fruit = getRandomFruit();

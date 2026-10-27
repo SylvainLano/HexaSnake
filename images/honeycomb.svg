@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24.2487" height="42">
+  <!-- One tile of the honeycomb behind the page: a pointy-top hex (side 14) and the edge below it -->
+  <path d="M12.1244,0 L24.2487,7 L24.2487,21 L12.1244,28 L0,21 L0,7 Z M12.1244,28 L12.1244,42" fill="none" stroke="#DCE8D6" stroke-width="1"/>
+</svg>
