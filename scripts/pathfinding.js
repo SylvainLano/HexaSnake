@@ -95,6 +95,73 @@ function aStarSearch(start, goals, isWalkable) {
   return { path: null, explored };
 }
 
+// AW, the "aware" A*: it remembers the path A* found and follows it, and only searches again when
+// something changed around the snake since then:
+// - the board changed: a fruit or a wall added or removed, a fruit eaten;
+// - the snake is not where the path said, because it followed another algorithm;
+// - the path is a detour, longer than the straight distance to the nearest fruit, and a hex the tail
+//   just left touches the hexes the last A* search explored: a shortcut, or a nearer fruit hidden
+//   behind the tail, may have opened up. Otherwise no shorter way can exist: a straight path can't be
+//   beaten, and a shorter way through a freed hex would have to come from a hex that A* expanded.
+// Otherwise the snake's own moves can't block the way ahead, since its body only covers hexes its head
+// has already crossed. While it keeps its path, it still checks that every hex of it can be entered:
+// those are the hexes it explores.
+//
+// search() only looks and changes nothing, so it can be timed by running it again and again;
+// remember() is then called once per step, before the snake moves.
+// situation: { boardVersion, body }, the board's version and the snake's body at the time of the search.
+class AwareSearch {
+  constructor() {
+    this.memory = null;
+  }
+
+  forget() {
+    this.memory = null;
+  }
+
+  search(start, goals, isWalkable, situation) {
+    if (this.canKeep(start, situation) && this.memory.path.every(isWalkable)) {
+      return { path: this.memory.path, explored: this.memory.path.slice(), searched: false };
+    }
+    return { ...aStarSearch(start, goals, isWalkable), searched: true };
+  }
+
+  canKeep(start, situation) {
+    const memory = this.memory;
+    return memory !== null &&
+      memory.path.length > 0 &&
+      memory.boardVersion === situation.boardVersion &&
+      sameHex(memory.start, start) &&
+      !(memory.detour && this.freedNearExplored(situation.body));
+  }
+
+  // Whether a hex the body left since the last step touches the hexes explored by the last A* search
+  freedNearExplored(body) {
+    const covered = new Set(body.map(hexKey));
+    return this.memory.body.some((hex) => !covered.has(hexKey(hex)) &&
+      [0, 1, 2, 3, 4, 5].some((direction) => this.memory.explored.has(hexKey(hexNeighbor(hex, direction)))));
+  }
+
+  // Keep the rest of the way, for when the head is on the first step of this path
+  remember(result, goals, situation) {
+    if (!result.path) {
+      this.forget();
+      return;
+    }
+    const [next, ...rest] = result.path;
+    const nearest = Math.min(...goals.map((goal) => hexDistance(next, goal)));
+    this.memory = {
+      start: next,
+      path: rest,
+      detour: rest.length > nearest,
+      boardVersion: situation.boardVersion,
+      body: situation.body.slice(), // to see which hexes the snake leaves at the next step
+      // The hexes of the last real search, kept while the path is
+      explored: result.searched ? new Set(result.explored.map(hexKey)) : this.memory.explored
+    };
+  }
+}
+
 // Construct the path to end by following previous steps back to start
 function buildPath(previous, start, end) {
   const path = [];

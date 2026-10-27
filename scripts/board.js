@@ -5,6 +5,7 @@ class Board {
   constructor(size) {
     this.size = size;
     this.fruitCount = 0;
+    this.version = 0; // goes up at every change, so a search can tell whether the board changed since it looked
     this.cells = []; // cells[r][q]
 
     for (let r = 0; r < size; r++) {
@@ -53,6 +54,7 @@ class Board {
     if (this.isEmpty(hex)) {
       this.cells[hex.r][hex.q].fruit = getRandomFruit();
       this.fruitCount++;
+      this.version++;
     }
   }
 
@@ -60,6 +62,7 @@ class Board {
     if (this.hasFruit(hex)) {
       this.cells[hex.r][hex.q].fruit = null;
       this.fruitCount--;
+      this.version++;
     }
   }
 
@@ -70,6 +73,7 @@ class Board {
       }
     }
     this.fruitCount = 0;
+    this.version++;
   }
 
   // Give every empty hex the given chance of getting a fruit
@@ -91,12 +95,14 @@ class Board {
   addWall(hex) {
     if (this.isEmpty(hex)) {
       this.cells[hex.r][hex.q].wall = true;
+      this.version++;
     }
   }
 
   removeWall(hex) {
     if (this.hasWall(hex)) {
       this.cells[hex.r][hex.q].wall = false;
+      this.version++;
     }
   }
 
@@ -106,5 +112,6 @@ class Board {
         cell.wall = false;
       }
     }
+    this.version++;
   }
 }

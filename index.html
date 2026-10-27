@@ -4,16 +4,17 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Hexagonal Snake Demo</title>
-		<link rel="stylesheet" href="css/style.css?v=0.0.6"/>
+		<link rel="stylesheet" href="css/style.css?v=0.0.7"/>
 		<!-- The version is repeated in ?v= so browsers fetch new files after an update, and at the bottom of the side window -->
-		<script src="scripts/hex.js?v=0.0.6" defer></script>
-		<script src="scripts/fruits.js?v=0.0.6" defer></script>
-		<script src="scripts/board.js?v=0.0.6" defer></script>
-		<script src="scripts/pathfinding.js?v=0.0.6" defer></script>
-		<script src="scripts/snake.js?v=0.0.6" defer></script>
-		<script src="scripts/render.js?v=0.0.6" defer></script>
-		<script src="scripts/chart.js?v=0.0.6" defer></script>
-		<script src="scripts/main.js?v=0.0.6" defer></script>
+		<script src="scripts/hex.js?v=0.0.7" defer></script>
+		<script src="scripts/fruits.js?v=0.0.7" defer></script>
+		<script src="scripts/board.js?v=0.0.7" defer></script>
+		<script src="scripts/pathfinding.js?v=0.0.7" defer></script>
+		<script src="scripts/snake.js?v=0.0.7" defer></script>
+		<script src="scripts/render.js?v=0.0.7" defer></script>
+		<script src="scripts/chart.js?v=0.0.7" defer></script>
+		<script src="scripts/main.js?v=0.0.7" defer></script>
+		<script src="scripts/study.js?v=0.0.7" defer></script>
 	</head>
 
 	<body>
@@ -24,7 +25,7 @@
 
 		<div class="center_container" id="header">
 			
-			<h1>Hexagonal Snake</h1>
+			<h1>Hexagonal Snake<button class="round_button" id="study_button" title="How does the snake find its way?">?</button></h1>
 			
 		</div>
 
@@ -70,6 +71,68 @@
 
 				<div id="window">
 					<canvas id="board" width="600" height="600"></canvas>
+
+					<!-- The study, over the board: what was tried to make the snake find its way, one page at a time -->
+					<div id="study_panel" hidden>
+						<button class="study_close" id="study_close" title="Close">&times;</button>
+
+						<section class="study_page">
+							<h2>Why hexagons?</h2>
+							<p>In 2023, I was chatting with my brother about pathfinding. Dijkstra, A* and their cousins are nearly always explained on square grids. So what happens on hexagons? This snake is my answer, first written in about twelve hours.</p>
+							<h3>No diagonals</h3>
+							<p>On a square grid, a cell has 4 neighbours, or 8 if diagonals are allowed. With 4, paths turn into staircases and many different paths have the same length. With 8, a diagonal step is about 1.41 times longer than a straight one, so the algorithms need special costs.</p>
+							<p>On a hexagonal grid, the 6 neighbours of a cell are all exactly as far away: there are no diagonals, every step costs the same, and the distance between two cells can be computed exactly.</p>
+							<h3>Dijkstra first</h3>
+							<p>To reach a fruit, the snake started with Dijkstra's algorithm: from its head, it explores the board ring after ring, closest cells first, until it reaches a fruit, then follows the way back. Here every step costs 1, so Dijkstra boils down to a simple breadth-first search.</p>
+							<p>It always finds the shortest path... but it searches in every direction, even away from the fruit. Turn on View: Explored to see the cells it looks at.</p>
+						</section>
+
+						<section class="study_page" hidden>
+							<h2>A*: searching in the right direction</h2>
+							<p>A* explores too, but it starts with the cells that look closest to a fruit: the steps already taken, plus the straight distance to the nearest fruit. Walls can only make the real way longer, so this guess never overestimates, and A* still finds the shortest paths.</p>
+							<h3>Results</h3>
+							<ul>
+								<li>Both always find paths of the same length: on the Path curve, their two lines overlap.</li>
+								<li>On 114 random boards, from 10 to 60 cells wide with up to 35% of walls, A* explored 4,589 cells where Dijkstra explored 44,918: about 10 times fewer.</li>
+								<li>With a wall between the snake and a fruit, Dijkstra explored 368 cells and A* only 60, for the same 13-step path.</li>
+								<li>But A* is not always faster: with hundreds of fruits on the board, it compares every cell it explores with every fruit to find the nearest one, and ends up slower than Dijkstra while exploring less.</li>
+							</ul>
+							<p>Hexagons suit A* well: on an empty board, the hex distance is exactly the length of the shortest path, so A* heads straight for the fruit.</p>
+							<h3>How to go further?</h3>
+							<p>Both algorithms start from scratch at every step, while the board barely changes from one step to the next. Could the snake remember its way?</p>
+						</section>
+
+						<section class="study_page" hidden>
+							<h2>AW: an aware snake</h2>
+							<p>AW (for aware) runs A* once, remembers the path and follows it. It only searches again when something around it changes:</p>
+							<ul>
+								<li>the visitor adds or removes a fruit or a wall;</li>
+								<li>a wall cuts the remembered path, or the fruit it was heading for is gone;</li>
+								<li>the snake is not where AW expected, because it follows another algorithm.</li>
+							</ul>
+							<p>The snake's own moves never block the way ahead: its body only covers cells its head has already crossed. So they don't trigger a new search, with one exception: when its path is a detour, longer than the straight distance to the nearest fruit, and the tail frees a cell right next to the cells the last search explored, a shortcut, or a nearer fruit hidden behind the tail, may have opened up, so AW searches again. Otherwise no shorter way can exist: a straight path can't be beaten, and a shorter way through a freed cell would have to start from a cell that A* explored.</p>
+							<p>A remembered path could stop being the shortest. These rules are made so that it can't: whatever could shorten it makes AW search again.</p>
+						</section>
+
+						<section class="study_page" hidden>
+							<h2>AW: results</h2>
+							<p>Games of 200 steps on a board of 40, one fruit at a time placed far from the snake, compared with A*:</p>
+							<table class="study_table">
+								<tr><th>Board</th><th>AW searches</th><th>Cells explored</th><th>Time</th></tr>
+								<tr><td>Open</td><td>4% of the steps</td><td>2.7&times; fewer</td><td>6&times; less</td></tr>
+								<tr><td>15% walls</td><td>10 to 13%</td><td>2.3 to 2.7&times; fewer</td><td>3.7 to 5.5&times; less</td></tr>
+								<tr><td>30% walls</td><td>20 to 42%</td><td>1.4 to 2.1&times; fewer</td><td>1.6 to 2.6&times; less</td></tr>
+							</table>
+							<p>In all those games, AW's paths were exactly as short as A*'s. Its time drops even more than its cells: while it keeps its path, it only checks a list of cells, without A*'s calculations.</p>
+							<p>A first version searched again whenever the tail moved along a detour: around a wall, that was every single step. Watching the explored cells brought it down to 5 searches in 21 steps.</p>
+						</section>
+
+						<div class="study_navigation">
+							<button id="study_previous">&lsaquo; Previous</button>
+							<span id="study_page_number"></span>
+							<button id="study_next">Next &rsaquo;</button>
+						</div>
+					</div>
 				</div>
 
 				<div id="side_window">
@@ -169,7 +232,7 @@
 					</div>
 
 					<div class="version">
-						v0.0.6
+						v0.0.7
 					</div>
 
 				</div>

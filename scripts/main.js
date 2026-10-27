@@ -5,10 +5,12 @@ const initialLength = 5;
 const stepSpeeds = [1000, 750, 500, 375, 250, 200, 150, 100, 75, 50, 25]; // milliseconds per step, for each position of the speed slider
 
 // The algorithms the snake can use to find its way to a fruit (see pathfinding.js), all compared at each step.
-// shortName is for the comparison table, color for their curve.
+// shortName is for the comparison table, color for their curve; memory, for those who remember their last search.
+const awareSearch = new AwareSearch();
 const pathfinders = [
   { name: 'Dijkstra', shortName: 'Dij.', color: '#B02020', search: dijkstraSearch },
-  { name: 'A*', shortName: 'A*', color: '#2A78D6', search: aStarSearch }
+  { name: 'A*', shortName: 'A*', color: '#2A78D6', search: aStarSearch },
+  { name: 'AW', shortName: 'AW', color: '#1BAF7A', search: (...args) => awareSearch.search(...args), memory: awareSearch }
 ];
 // The measures of each search: the rows of the comparison table, and what the chart can follow
 const comparisonRows = [
@@ -77,8 +79,13 @@ function step() {
   let path = null;
   let searches = null;
   if (board.hasAnyFruit()) {
-    searches = compareSearches();
+    const goals = board.fruitHexes();
+    const situation = { boardVersion: board.version, body: snake.body };
+    searches = compareSearches(goals, situation);
     path = searches[pathfinderIndex].path;
+    rememberSearches(searches, goals, situation);
+  } else {
+    forgetSearches();
   }
   recordSearches(searches);
 
@@ -98,8 +105,7 @@ function step() {
 
 // Run every algorithm on the same situation and time them.
 // A single search is too quick to time reliably, so each one is repeated for at least 2 ms.
-function compareSearches() {
-  const goals = board.fruitHexes();
+function compareSearches(goals, situation) {
   const isWalkable = snake.walkableTest(board);
   return pathfinders.map((pathfinder) => {
     const startTime = performance.now();
@@ -107,12 +113,29 @@ function compareSearches() {
     let runs = 0;
     let elapsed;
     do {
-      result = pathfinder.search(snake.position, goals, isWalkable);
+      result = pathfinder.search(snake.position, goals, isWalkable, situation);
       runs++;
       elapsed = performance.now() - startTime;
     } while (elapsed < 2);
-    return { path: result.path, explored: result.explored, time: elapsed / runs };
+    return { path: result.path, explored: result.explored, searched: result.searched, time: elapsed / runs };
   });
+}
+
+// The algorithms with a memory keep what they found at this step
+function rememberSearches(searches, goals, situation) {
+  pathfinders.forEach((pathfinder, i) => {
+    if (pathfinder.memory) {
+      pathfinder.memory.remember(searches[i], goals, situation);
+    }
+  });
+}
+
+function forgetSearches() {
+  for (const pathfinder of pathfinders) {
+    if (pathfinder.memory) {
+      pathfinder.memory.forget();
+    }
+  }
 }
 
 // Keep the measures of this step's searches (null when there was no fruit to look for),
@@ -256,6 +279,7 @@ function resetGame() {
   showComparison(null);
   updateChart();
   lastSearches = null;
+  forgetSearches();
   updateSearchOverlay();
   draw();
 }

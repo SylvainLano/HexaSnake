@@ -9,13 +9,14 @@
 	/* Add more font formats if necessary for cross-browser compatibility */
   }
 
-/* Pixelify Sans, for the help text (SIL Open Font License, see fonts/PixelifySans-OFL.txt) */
+/* Pixelify Sans, for the help text (SIL Open Font License, see fonts/PixelifySans-OFL.txt).
+   Its "fi" ligature looks like an "A", so the texts using it turn ligatures off. */
 @font-face {
 	font-family: 'Pixelify Sans';
 	src: url('../fonts/PixelifySans.woff2') format('woff2');
 }
 
-/* Jersey 10, for the numbers of the comparison table (SIL Open Font License, see fonts/Jersey10-OFL.txt) */
+/* Jersey 10, for the comparison, the help and the study (SIL Open Font License, see fonts/Jersey10-OFL.txt) */
 @font-face {
 	font-family: 'Jersey 10';
 	src: url('../fonts/Jersey10.woff2') format('woff2');
@@ -43,7 +44,7 @@ h1 {
 /* Classes */
 
 .center_container{
-	width: 1000px;
+	width: 1100px;
 	margin: auto;
 	text-align: center;
 }
@@ -84,8 +85,9 @@ h1 {
 	padding: 10px 5px;
 	text-align: justify;
 	color:#40C0C0;
-	font-family: 'Pixelify Sans';
-	font-size: 12px;
+	font-family: 'Jersey 10';
+	font-size: 14px;
+	line-height: 1.15;
 }
 
 .text p + p {
@@ -244,12 +246,147 @@ h1 {
 }
 
 #left_window {
-	width: 180px;
+	width: 250px;
 	margin-top: 20px;
 }
 
+/* The algorithm buttons, two by row */
+#algorithm_buttons {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
 #window {
+	position: relative;
 	width: 600px;
+}
+
+/* The "?" next to the title, which opens the study */
+.round_button {
+	width: 36px;
+	height: 36px;
+	margin-left: 16px;
+	vertical-align: middle;
+	border: none;
+	border-radius: 50%;
+	background: rgb(255, 221, 221);
+	color: #B02020;
+	font-family: 'MADFONT';
+	font-size: 24px;
+	cursor: pointer;
+}
+
+.round_button:hover {
+	background: #ffe8d0;
+}
+
+/* The study, over the board */
+#study_panel {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	display: flex;
+	flex-direction: column;
+	padding: 14px 26px 10px;
+	background: #FFFFFF;
+	border: 1px solid #DCE8D6;
+	text-align: left;
+}
+
+#study_panel[hidden] {
+	display: none;
+}
+
+.study_page {
+	flex: 1;
+	overflow-y: auto;
+	font-family: 'Jersey 10';
+	font-size: 17px;
+	line-height: 1.2;
+	color: #333333;
+}
+
+.study_page h2 {
+	padding-bottom: 8px;
+	font-family: 'MADFONT';
+	font-size: 22px;
+	font-weight: 100;
+	color: #208020;
+}
+
+.study_page h3 {
+	padding: 6px 0px 2px;
+	font-family: 'MADFONT';
+	font-size: 15px;
+	font-weight: 100;
+}
+
+.study_page p, .study_page ul {
+	padding-bottom: 5px;
+}
+
+.study_page li {
+	margin-left: 18px;
+}
+
+/* Figures of a page of the study */
+.study_table {
+	margin-bottom: 5px;
+	border-collapse: collapse;
+}
+
+.study_table th, .study_table td {
+	padding: 1px 12px 1px 0px;
+	text-align: left;
+	font-weight: normal;
+}
+
+.study_table th {
+	color: #898781;
+}
+
+.study_coming {
+	color: #898781;
+}
+
+.study_close {
+	position: absolute;
+	top: 8px;
+	right: 10px;
+	border: none;
+	background: none;
+	font-size: 26px;
+	color: #898781;
+	cursor: pointer;
+}
+
+.study_navigation {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-top: 8px;
+	font-family: 'MADFONT';
+	font-size: 15px;
+}
+
+.study_navigation button {
+	padding: 2px 8px;
+	border: none;
+	background: rgb(255, 221, 221);
+	color: #B02020;
+	font-family: 'MADFONT';
+	font-size: 15px;
+	cursor: pointer;
+}
+
+.study_navigation button:hover {
+	background: #ffe8d0;
+}
+
+.study_navigation button:disabled {
+	visibility: hidden;
 }
 
 #side_window {
