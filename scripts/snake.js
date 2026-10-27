@@ -1,5 +1,6 @@
 // The snake: its body is a list of hexes from head to tail.
 // It heads for the nearest fruit, wanders when none can be reached, and gets shorter with hunger.
+// It dies when it has nowhere to go: walls, the borders and its own body block its way.
 class Snake {
   constructor(head, length) {
     this.position = { q: head.q, r: head.r };
@@ -16,10 +17,15 @@ class Snake {
     }
   }
 
-  // Returns a function telling whether a hex can be entered: inside the board and not part of the body
+  // Check if the given hex is part of the snake's body
+  occupies(hex) {
+    return this.body.some((segment) => sameHex(segment, hex));
+  }
+
+  // Returns a function telling whether a hex can be entered: inside the board, not a wall and not part of the body
   walkableTest(board) {
     const occupied = new Set(this.body.map(hexKey));
-    return (hex) => board.isInside(hex) && !occupied.has(hexKey(hex));
+    return (hex) => board.isInside(hex) && !board.hasWall(hex) && !occupied.has(hexKey(hex));
   }
 
   // method to list available directions to move to

@@ -3,8 +3,9 @@ const outlineColor = '#EEEEEE';
 const hoverOutlineColor = '#FF0000';
 const snakeColor = '#44F044';
 const snakeDeadColor = '#F04444';
+const wallColor = '#505050';
 
-// Draws the whole board: the snake, the fruits, the outline of empty hexes, then the hovered hex
+// Draws the whole board: the snake, the walls, the fruits, the outline of empty hexes, then the hovered hex
 function drawBoard(ctx, layout, board, snake, hoveredHex) {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.lineWidth = 1;
@@ -19,6 +20,8 @@ function drawBoard(ctx, layout, board, snake, hoveredHex) {
       const hex = { q, r };
       if (snakeHexes.has(hexKey(hex))) {
         fillHexagon(ctx, layout, hex, snake.isAlive ? snakeColor : snakeDeadColor);
+      } else if (board.hasWall(hex)) {
+        fillHexagon(ctx, layout, hex, wallColor);
       } else if (board.hasFruit(hex)) {
         drawFruit(ctx, layout, hex, board.fruitAt(hex));
       } else {

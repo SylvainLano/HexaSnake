@@ -4,15 +4,15 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Hexagonal Snake Demo</title>
-		<link rel="stylesheet" href="css/style.css?v=0.0.4"/>
+		<link rel="stylesheet" href="css/style.css?v=0.0.5"/>
 		<!-- The version is repeated in ?v= so browsers fetch new files after an update, and at the bottom of the side window -->
-		<script src="scripts/hex.js?v=0.0.4" defer></script>
-		<script src="scripts/fruits.js?v=0.0.4" defer></script>
-		<script src="scripts/board.js?v=0.0.4" defer></script>
-		<script src="scripts/pathfinding.js?v=0.0.4" defer></script>
-		<script src="scripts/snake.js?v=0.0.4" defer></script>
-		<script src="scripts/render.js?v=0.0.4" defer></script>
-		<script src="scripts/main.js?v=0.0.4" defer></script>
+		<script src="scripts/hex.js?v=0.0.5" defer></script>
+		<script src="scripts/fruits.js?v=0.0.5" defer></script>
+		<script src="scripts/board.js?v=0.0.5" defer></script>
+		<script src="scripts/pathfinding.js?v=0.0.5" defer></script>
+		<script src="scripts/snake.js?v=0.0.5" defer></script>
+		<script src="scripts/render.js?v=0.0.5" defer></script>
+		<script src="scripts/main.js?v=0.0.5" defer></script>
 	</head>
 
 	<body>
@@ -95,7 +95,13 @@
 								Gorge
 							</p>
 						</div>
-					</div>	
+
+						<div class="button" id="clear_walls_button">
+							<p>
+								Demolish
+							</p>
+						</div>
+					</div>
 
 					<div class="label">
 						Menu :
@@ -115,11 +121,12 @@
 					</div>
 
 					<div class="text">
-						Help the snake get bigger by dropping fruits. Don't overfeed him or he might bite its own tail...
+						<p>Help the snake get bigger by dropping fruits. Don't overfeed him or he might bite its own tail...</p>
+						<p>Left click: fruits. Right click: walls. Drag to draw, click again to remove.</p>
 					</div>
 
 					<div class="version">
-						v0.0.4
+						v0.0.5
 					</div>
 
 				</div>
