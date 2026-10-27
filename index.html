@@ -4,17 +4,18 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Hexagonal Snake Demo</title>
-		<link rel="stylesheet" href="css/style.css?v=0.0.7"/>
+		<link rel="stylesheet" href="css/style.css?v=0.0.8"/>
 		<!-- The version is repeated in ?v= so browsers fetch new files after an update, and at the bottom of the side window -->
-		<script src="scripts/hex.js?v=0.0.7" defer></script>
-		<script src="scripts/fruits.js?v=0.0.7" defer></script>
-		<script src="scripts/board.js?v=0.0.7" defer></script>
-		<script src="scripts/pathfinding.js?v=0.0.7" defer></script>
-		<script src="scripts/snake.js?v=0.0.7" defer></script>
-		<script src="scripts/render.js?v=0.0.7" defer></script>
-		<script src="scripts/chart.js?v=0.0.7" defer></script>
-		<script src="scripts/main.js?v=0.0.7" defer></script>
-		<script src="scripts/study.js?v=0.0.7" defer></script>
+		<script src="scripts/hex.js?v=0.0.8" defer></script>
+		<script src="scripts/fruits.js?v=0.0.8" defer></script>
+		<script src="scripts/board.js?v=0.0.8" defer></script>
+		<script src="scripts/pathfinding.js?v=0.0.8" defer></script>
+		<script src="scripts/numbered.js?v=0.0.8" defer></script>
+		<script src="scripts/snake.js?v=0.0.8" defer></script>
+		<script src="scripts/render.js?v=0.0.8" defer></script>
+		<script src="scripts/chart.js?v=0.0.8" defer></script>
+		<script src="scripts/main.js?v=0.0.8" defer></script>
+		<script src="scripts/study.js?v=0.0.8" defer></script>
 	</head>
 
 	<body>
@@ -119,12 +120,33 @@
 							<p>Games of 200 steps on a board of 40, one fruit at a time placed far from the snake, compared with A*:</p>
 							<table class="study_table">
 								<tr><th>Board</th><th>AW searches</th><th>Cells explored</th><th>Time</th></tr>
-								<tr><td>Open</td><td>4% of the steps</td><td>2.7&times; fewer</td><td>6&times; less</td></tr>
-								<tr><td>15% walls</td><td>10 to 13%</td><td>2.3 to 2.7&times; fewer</td><td>3.7 to 5.5&times; less</td></tr>
-								<tr><td>30% walls</td><td>20 to 42%</td><td>1.4 to 2.1&times; fewer</td><td>1.6 to 2.6&times; less</td></tr>
+								<tr><td>Open</td><td>3 to 5% of the steps</td><td>2.5 to 2.8&times; fewer</td><td>5.5 to 7&times; less</td></tr>
+								<tr><td>15% walls</td><td>9 to 16%</td><td>2.1 to 2.4&times; fewer</td><td>3.1 to 5.2&times; less</td></tr>
+								<tr><td>30% walls</td><td>24 to 50%</td><td>1.5 to 1.8&times; fewer</td><td>1.6 to 2.6&times; less</td></tr>
 							</table>
 							<p>In all those games, AW's paths were exactly as short as A*'s. Its time drops even more than its cells: while it keeps its path, it only checks a list of cells, without A*'s calculations.</p>
 							<p>A first version searched again whenever the tail moved along a detour: around a wall, that was every single step. Watching the explored cells brought it down to 5 searches in 21 steps.</p>
+						</section>
+
+						<section class="study_page" hidden>
+							<h2>AW#: the same, with numbered cells</h2>
+							<p>AW# is exactly AW: same searches, same explored cells, same paths. Only the code changes.</p>
+							<p>So far, each cell is named by a text such as "4,2". Every time a search checks a cell, it writes that text again and looks it up in a table. In AW#, a cell is simply a number: on a board of 30, cell (4, 2) is 2 &times; 30 + 4 = 64, and checking it means reading box 64 of a plain list of numbers. Nothing to write, nothing to look up. Even its neighbours are found with a few additions.</p>
+							<p>A first test on a board of 60 was promising: the same breadth-first search ran 19 times faster this way. In the comparison, only the Time row should tell AW# from AW.</p>
+						</section>
+
+						<section class="study_page" hidden>
+							<h2>AW#: results</h2>
+							<p>In every step we compared, nearly 3,000 of them on boards from 10 to 60, AW# made exactly the same choices as AW: the same cells explored, in the same order, and the same paths. And it does it faster:</p>
+							<table class="study_table">
+								<tr><th>Situation</th><th>AW# takes</th></tr>
+								<tr><td>The whole board explored</td><td>4.6 to 7.8&times; less time than A*</td></tr>
+								<tr><td>Games, open board</td><td>2.7 to 9.6&times; less time than AW</td></tr>
+								<tr><td>Games, 15% walls</td><td>3.3 to 5.6&times; less time than AW</td></tr>
+								<tr><td>Games, 30% walls</td><td>4.9 to 5.7&times; less time than AW</td></tr>
+							</table>
+							<p>Far from the 19 times of the first test: a search does more than look at cells. A* also keeps a heap of the cells to explore, and measures their distance to the fruits.</p>
+							<p>Two lessons along the way. The first AW# was only 1.5 to 1.8 times faster than A*: swapping two entries of its heap with [a, b] = [b, a] built small arrays at every swap, and a plain temporary variable made it 2.6 times faster. And the timing was unfair at first: AW rebuilt the list of the snake's cells as texts while being timed, when AW# got it ready.</p>
 						</section>
 
 						<div class="study_navigation">
@@ -232,7 +254,7 @@
 					</div>
 
 					<div class="version">
-						v0.0.7
+						v0.0.8
 					</div>
 
 				</div>

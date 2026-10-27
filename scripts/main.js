@@ -7,16 +7,19 @@ const stepSpeeds = [1000, 750, 500, 375, 250, 200, 150, 100, 75, 50, 25]; // mil
 // The algorithms the snake can use to find its way to a fruit (see pathfinding.js), all compared at each step.
 // shortName is for the comparison table, color for their curve; memory, for those who remember their last search.
 const awareSearch = new AwareSearch();
+const numberedAwareSearch = new NumberedAwareSearch();
 const pathfinders = [
   { name: 'Dijkstra', shortName: 'Dij.', color: '#B02020', search: dijkstraSearch },
   { name: 'A*', shortName: 'A*', color: '#2A78D6', search: aStarSearch },
-  { name: 'AW', shortName: 'AW', color: '#1BAF7A', search: (...args) => awareSearch.search(...args), memory: awareSearch }
+  { name: 'AW', shortName: 'AW', color: '#1BAF7A', search: (...args) => awareSearch.search(...args), memory: awareSearch },
+  { name: 'AW#', shortName: 'AW#', color: '#EDA100', search: (...args) => numberedAwareSearch.search(...args), memory: numberedAwareSearch }
 ];
-// The measures of each search: the rows of the comparison table, and what the chart can follow
+// The measures of each search: the rows of the comparison table, and what the chart can follow (the first one at start).
+// Time comes first: it is the only measure that tells AW# from AW.
 const comparisonRows = [
+  { key: 'time', label: 'Time (µs)', value: (search) => search.time },
   { key: 'explored', label: 'Explored', value: (search) => search.explored },
-  { key: 'path', label: 'Path', value: (search) => search.path },
-  { key: 'time', label: 'Time (µs)', value: (search) => search.time }
+  { key: 'path', label: 'Path', value: (search) => search.path }
 ];
 const chartLength = 100; // steps shown by the chart
 
@@ -80,7 +83,13 @@ function step() {
   let searches = null;
   if (board.hasAnyFruit()) {
     const goals = board.fruitHexes();
-    const situation = { boardVersion: board.version, body: snake.body };
+    // covered: the keys of the body's hexes, for AW; grid: the same situation with numbered cells, for AW#
+    const situation = {
+      boardVersion: board.version,
+      body: snake.body,
+      covered: new Set(snake.body.map(hexKey)),
+      grid: numberCells(board, snake.body)
+    };
     searches = compareSearches(goals, situation);
     path = searches[pathfinderIndex].path;
     rememberSearches(searches, goals, situation);
@@ -161,7 +170,8 @@ function showComparison(measures) {
   pathfinders.forEach((pathfinder, i) => {
     for (const row of comparisonRows) {
       const value = measures ? row.value(measures[i]) : '-';
-      pathfinder.cells[row.key].textContent = value === null ? 'none' : value;
+      // Thousands past 10,000, so that four columns still fit in the panel
+      pathfinder.cells[row.key].textContent = value === null ? 'none' : value >= 10000 ? `${Math.round(value / 1000)}K` : value;
     }
   });
 }

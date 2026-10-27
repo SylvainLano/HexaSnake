@@ -109,7 +109,8 @@ function aStarSearch(start, goals, isWalkable) {
 //
 // search() only looks and changes nothing, so it can be timed by running it again and again;
 // remember() is then called once per step, before the snake moves.
-// situation: { boardVersion, body }, the board's version and the snake's body at the time of the search.
+// situation: { boardVersion, body, covered }, the board's version, the snake's body and the keys of its hexes
+// (built once per step, like the isWalkable test) at the time of the search.
 class AwareSearch {
   constructor() {
     this.memory = null;
@@ -132,12 +133,11 @@ class AwareSearch {
       memory.path.length > 0 &&
       memory.boardVersion === situation.boardVersion &&
       sameHex(memory.start, start) &&
-      !(memory.detour && this.freedNearExplored(situation.body));
+      !(memory.detour && this.freedNearExplored(situation.covered));
   }
 
   // Whether a hex the body left since the last step touches the hexes explored by the last A* search
-  freedNearExplored(body) {
-    const covered = new Set(body.map(hexKey));
+  freedNearExplored(covered) {
     return this.memory.body.some((hex) => !covered.has(hexKey(hex)) &&
       [0, 1, 2, 3, 4, 5].some((direction) => this.memory.explored.has(hexKey(hexNeighbor(hex, direction)))));
   }
